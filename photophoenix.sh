@@ -40,14 +40,14 @@ then
   sleep 3
   pkg update
   pkg upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
-  pkg install -y iproute2
+  pkg install -y traceroute
   echo -e "${GREEN}Checking network interface ...\nNOTE : The software will only continue to work if you are connected to the internet via Wi-Fi network.\n(To save data during limited data usage)${END}"
   sleep 3
-  if ip route show | grep -q "192.168.0." || ip route show | grep -q "192.168.1."
+  if traceroute -m 1 1.1.1.1 2> /dev/null | grep -q -E "192\.168\.(0|1[0-9]*)\."
   then
     while true
     do
-      if ip route show | grep -q "192.168.0." || ip route show | grep -q "192.168.1."
+      if traceroute -m 1 1.1.1.1 2> /dev/null | grep -q -E "192\.168\.(0|1[0-9]*)\."
       then
         :
       else
