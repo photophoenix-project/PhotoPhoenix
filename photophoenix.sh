@@ -10,6 +10,7 @@ set -e
 trap 'echo -e "${RED}PhotoPhoenix has stopped due to a reason beyond its control!\nPlease try again.${END}"; rm -f "tppd.txt"; rm -rf "storage/shared/PhotoPhoenix/restored_photos"; exit 1' INT ERR
 sleep 1
 cd ~
+clear
 echo -e "${GREEN}PhotoPhoenix : Running ...${END}"
 sleep 6
 if [ -d "storage" ]
